@@ -1,0 +1,95 @@
+You are an expert software architect and Flutter/Dart developer. I need you to help me build a complete, production-ready system designed for elderly memory-loss care. The system will manage and push ambient information to an e-paper device called TRMNL.
+
+Please review the detailed specifications below, design the architecture, and generate the clean, modular code required for this implementation.
+
+---
+
+### 1. THE USER SCENARIO & CONSTRAINTS
+- **End-User (The Elder):** An elderly family member experiencing memory loss. They require a completely static, distraction-free, low-stimulation, and highly readable display to help with daily orientation.
+- **Admin Users (The Family):** Non-tech-savvy family members who need an incredibly simple, friction-free way to send messages, update calendars, and log completed tasks.
+- **Hardware Target:** TRMNL e-paper display (via custom API webhook/plugin integration).
+
+---
+
+### 2. CORE FEATURES & REQUIREMENTS
+
+
+First of all, all the info displayed on the screen must be in correct Arabic. Also in the family members' facing dashboard/screen.
+#### A. The Elder's Screen Layout (TRMNL Rendering Output)
+The output must generate clean, highly-legible HTML/CSS tailored for the TRMNL screen dimensions (800x480 resolution, monochrome). It must display:
+- **Daily Orientation:** Current day of the week, full date, and a friendly indicator of the current time-of-day period (e.g., "Morning", "Afternoon", "Evening", "Night") in a massive, bold font.
+- **Routine Reminders:** A clear, uncluttered list of critical tasks for that specific time period (e.g., "Take Morning Medication", "Lunchtime").
+- **Family Message:** A prominent space for a single, warm, comforting note from the family.
+- **Appointment Tracker:** A simple list of 1–2 upcoming events or caregiver arrivals for the day.
+- ** Bible verses:** Maybe a rotating list of sentences from the bible, the most famous ones, in correct Arabic.
+
+#### B. The Family Dashboard (App Requirements)
+- **Framework:** Flutter, built as a Progressive Web App (PWA) so family members can install it on their iPhone/Android home screens via a single URL with zero app store hassle.
+- **UI/UX Strategy:** Hyper-minimalist. Large buttons, highly visible text inputs, and a rigid "one-action-per-screen" workflow to prevent non-tech users from feeling overwhelmed.
+- **Key Views:**
+  1. *Status Screen:* Shows a simple indicator of whether the TRMNL device is online/updated.
+  2. *Message Board:* A large text field where a family member can type a note (e.g., "Hi Grandma, Sarah is coming to visit at 3 PM!") and tap a giant "Send to Screen" button.
+  3. *Care Schedule:* A simplified calendar interface to easily add or toggle routine tasks and doctor appointments, or even when the son is coming for his next visit (e.g. "Yousef 
+is coming at around 5 o'clock").
+- **Lock the web app for only family members (users). By password? Or phone numbers?**
+
+---
+
+
+### 3. SOFTWARE ARCHITECTURE & DATA FLOW
+
+#### A. Backend Engine (Python / FastAPI or Flask)
+- A lightweight Python web server using FastAPI (preferred) or Flask to act as the central brain.
+- **Endpoints Needed:**
+  1. `POST /api/message`: Accepts a JSON payload from the Flutter PWA containing new family messages or schedule updates, saving them to a lightweight database/file (e.g., SQLite or JSON file).
+  2. `GET /api/trmnl-payload`: The endpoint polled by the TRMNL webhook. It must:
+     - Check the current server time and determine the period of the day (Morning, Afternoon, Evening, Night).
+     - Fetch the latest family message and active care tasks. (maybe a rolling family messages list?)
+     - Return a TRMNL-compliant JSON response. This JSON must include the required keys (`html` containing the formatted, monochrome-safe HTML snippet, and any required metadata status flags).
+- **Refresh Interval:** The system handles data caching so that when TRMNL polls every 1 hour, it instantly receives the pre-compiled or freshly aggregated JSON without heavy processing.
+
+#### B. Frontend (Flutter PWA)
+- Fully responsive layout optimized for mobile screens, interacting with the Python backend via standard HTTP REST requests (`POST /api/message`).
+- State management utilizing a lightweight, predictable pattern (e.g., Riverpod or Provider).
+- PWA configurations complete with web manifest, icons, and offline caching capabilities for the dashboard structure.
+
+And tell where to deploy this kind of architecture.
+
+---
+
+### 4. YOUR TASKS (STEP-BY-STEP)
+1. **System Design & API Specs:** Outline the data models (Message, Task, Event) and the payload structure required to communicate with TRMNL's API.
+2. **Backend Logic & HTML Template:** Write the Dart/Node.js/Python logic to aggregate the data and generate the optimized, monochrome-friendly HTML/CSS layout for the TRMNL device.
+3. **Flutter PWA Implementation:** Generate the codebase for the Flutter Family Dashboard, focusing heavily on clean architecture, minimal UI components, and PWA setup.
+4. **Integration Guide:** Explain step-by-step how to link this system up with a TRMNL private plugin dashboard.
+
+Let's begin by scaffolding the architecture and defining the data models. Break your work down into logical, incremental steps so we can test as we go.
+
+---
+
+### 5. AMBIENT & BEHAVIORAL UX RULES (CRITICAL FOR MEMORY CARE)
+
+To ensure the system serves as a gentle, non-disruptive aid for cognitive decline, the Python backend must dynamically alter the generated HTML/CSS layout based on the time of day, and the Flutter app must handle safety guardrails.
+
+#### A. Automated Day/Night Modes (Circadian Rhythm Support)
+The Python HTML generator must automatically swap layouts based on the server's local time:
+- **Day Mode (6:00 AM - 7:59 PM):** Light background, crisp black text. High contrast to ensure maximum readability during daylight hours.
+- **Night Mode (8:00 PM - 5:59 AM):** Pure black background, stark white text (inverted mode). This dramatically reduces ambient light glare in a dark room, prevents sleep disruption, and serves as a heavy visual cue that it is bedtime.
+
+#### B. Time-of-Day Contextual Greetings
+The layout header must not just display a digital clock (which can cause confusion), but must explicitly state the time period in a giant visual badge:
+- **06:00 - 11:59:** "Good Morning ☀️"
+- **12:00 - 16:59:** "Good Afternoon 🌤️"
+- **17:00 - 19:59:** "Good Evening 🌅"
+- **20:00 - 05:59:** "Time for Sleep 🌙" (Paired with the dark mode layout).
+
+#### C. Message Persistence and "Stale Data" Prevention
+- **Expiration Rules:** Family messages can sometimes be forgotten by the senders. The Python backend must automatically expire any "Family Message" older than 24 hours. 
+- **Fallback State:** If no message has been sent recently, the space must gracefully collapse or display a generic, reassuring
+ default phrase (e.g., "We love you, Naseem! Have a peaceful day.") rather than leaving an empty, broken-looking box.
+
+#### D. Non-Tech Dashboard Safety Rails (Flutter App)
+Because the family members using the app are non-tech-savvy, add these software constraints:
+- **Character Limiters:** Restrict the Family Message text field to exactly 120 characters. This guarantees the text will always fit cleanly on the TRMNL screen without breaking the layout or overlapping other widgets.
+- **Accidental Double-Tap Protection:** Disable the "Send to Screen" button for 5 seconds immediately after a tap, displaying a clear "Sending..." spinner so users don't spam the server.
+

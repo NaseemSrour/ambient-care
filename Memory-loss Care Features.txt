@@ -1,0 +1,37 @@
+🧠 Using TRMNL for Memory-Loss Care (Visual Techniques)E-ink displays are highly effective for dementia and memory-loss management because they do not emit a harsh, confusing blue-light glow, mimicking a static sheet of paper.
+
+You can structure your layout transitions to assist an elderly relative using these cognitive support techniques:
+
+1. Color-Inverted Night ModeIndividuals dealing with memory loss frequently experience "Sundowning," a state of 
+increased confusion and anxiety that hits during the evening hours.
+The Technique: Use your Python script to track the hour.
+After 8:00 PM, change the HTML styling to invert the screen colors (a pitch-black background with clean white Arabic text) and change the main text string to "وقت النوم" (Bedtime).
+The Benefit: This provides a strong visual anchor that explicitly communicates 
+that the day has ended, preventing middle-of-the-night disorientation.
+
+2. Visual To-Do Checklists
+Short-term memory lapses can cause anxiety regarding daily routines (e.g., "Did I take my morning pills?").
+
+The Technique:
+Use your JSON data payload to pass an array of daily tasks.
+Display them on the screen using simple checkbox visuals.
+The Benefit: Instead of showing exact times which can induce time-blindness panic, structure the layout relative to events:[✓] تناول دواء الصباح (Morning medicine taken)[ ] تناول الغداء (Eat lunch)
+
+3. Hyper-Simplified "Spatial Orientation"
+Traditional calendar grids or digital smart-clocks present too much sensory data (battery bars, notification dots, weather icons, seconds counters), which can 
+clutter a mind experiencing cognitive decline.
+
+The Technique: 
+Strip every piece of secondary data out of your HTML markup.
+The layout should only feature three lines of massive text separated by stark black divider bars: Day, Time Period, and Date.
+
+The Benefit: Reducing the cognitive load allows your relative to process vital orientation information at a single glance without getting distracted or confused by secondary elements.
+
+4. The Family Photo Over-the-Air Reassurance:
+
+Isolation can spike memory-loss anxiety.
+You can expand your Flutter and Python workflow to accept images.
+The Technique: TRMNL allows private plugins to render basic image tags (<img src="...">).
+When family members use the Flutter app, they can upload a simple, high-contrast, black-and-white family photo alongside an Arabic text caption like "نحن نحبك يا جدي" (We love you, Grandpa).
+
+The Benefit: Seeing familiar faces instantly updates their immediate environment with a sense of safety and presence, even from miles away.
