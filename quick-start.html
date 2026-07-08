@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ambient Care — Quick Start</title>
+<style>
+  :root{
+    --teal:#00695C; --teal-dark:#004d40; --ink:#1e293b; --muted:#64748b;
+    --bg:#f6f7f9; --card:#ffffff; --border:#e2e8f0; --code-bg:#0f172a;
+    --code-ink:#e2e8f0; --accent:#f59e0b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.6;
+    padding:40px 20px;
+  }
+  .wrap{max-width:820px;margin:0 auto}
+  header{
+    background:linear-gradient(135deg,var(--teal),var(--teal-dark));
+    color:#fff;border-radius:20px;padding:32px 34px;margin-bottom:28px;
+    box-shadow:0 10px 30px -12px rgba(0,105,92,.5);
+  }
+  header h1{font-size:2rem;margin-bottom:6px;font-weight:800}
+  header p{opacity:.9;font-size:1.05rem}
+  h2{
+    font-size:1.35rem;margin:34px 0 14px;color:var(--teal-dark);
+    display:flex;align-items:center;gap:10px;
+  }
+  .card{
+    background:var(--card);border:1px solid var(--border);border-radius:16px;
+    padding:22px 24px;margin-bottom:16px;box-shadow:0 4px 12px -8px rgba(0,0,0,.12);
+  }
+  p.lead{color:var(--muted);margin-bottom:14px}
+  pre{
+    background:var(--code-bg);color:var(--code-ink);border-radius:12px;
+    padding:16px 18px;overflow-x:auto;font-size:.9rem;
+    font-family:"SFMono-Regular",Consolas,"Liberation Mono",Menlo,monospace;
+    line-height:1.55;
+  }
+  pre .c{color:#7dd3fc}          /* command accent */
+  pre .cm{color:#64748b;font-style:italic}  /* comment */
+  code.inline{
+    background:#eef2f4;color:var(--teal-dark);padding:2px 7px;border-radius:6px;
+    font-family:"SFMono-Regular",Consolas,monospace;font-size:.88em;font-weight:600;
+  }
+  .pill{
+    display:inline-block;background:#e0f2f1;color:var(--teal-dark);
+    font-weight:700;font-size:.75rem;padding:3px 10px;border-radius:999px;
+    letter-spacing:.03em;text-transform:uppercase;margin-bottom:10px;
+  }
+  table{width:100%;border-collapse:collapse;margin-top:6px}
+  th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+  th{font-size:.78rem;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+  td a{color:var(--teal);font-weight:600;text-decoration:none;font-family:Consolas,monospace}
+  td a:hover{text-decoration:underline}
+  td .d{color:var(--muted);font-size:.92rem}
+  .note{
+    background:#fffbeb;border:1px solid #fde68a;border-radius:12px;
+    padding:14px 18px;color:#92400e;margin-top:6px;font-size:.95rem;
+  }
+  .note strong{color:#78350f}
+  .grid2{display:grid;grid-template-columns:1fr;gap:10px}
+  kbd{background:#334155;color:#fff;border-radius:5px;padding:1px 7px;font-size:.82em;font-family:monospace}
+  footer{text-align:center;color:var(--muted);font-size:.85rem;margin-top:34px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>🩵 Ambient Care — Quick Start</h1>
+    <p>Run the TRMNL Arabic memory day-clock on your machine. PowerShell, from the project folder.</p>
+  </header>
+
+  <!-- BACKEND -->
+  <h2>🧠 1 · Run the backend</h2>
+  <div class="card">
+    <span class="pill">Terminal 1 — keep it running</span>
+    <p class="lead">The brain: aggregates data, renders the elder's screen, exposes the API.</p>
+<pre><span class="c">cd</span> backend
+<span class="cm"># first time only — creates your settings file</span>
+<span class="c">Copy-Item</span> .env.example .env
+<span class="c">.\.venv\Scripts\python.exe</span> -m uvicorn app.main:app --reload --port 8000</pre>
+    <div class="note">
+      <strong>Passcode &amp; settings:</strong> open <code class="inline">backend\.env</code> and set
+      <code class="inline">AC_FAMILY_PASSCODE</code> to your family login code
+      (default is <code class="inline">1234</code>). You can also change
+      <code class="inline">AC_DISPLAY_FONT</code> and
+      <code class="inline">AC_TIMEZONE</code> there. Restart the server after editing.
+    </div>
+  </div>
+
+  <!-- ENDPOINTS -->
+  <h2>🔗 2 · Open these in your browser</h2>
+  <div class="card">
+    <p class="lead">While the backend is running on port <code class="inline">8000</code>:</p>
+    <table>
+      <thead><tr><th>What</th><th>URL</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>👵 <strong>Elder's screen</strong> (live)</td>
+          <td><a href="http://localhost:8000/api/trmnl.html">localhost:8000/api/trmnl.html</a>
+            <div class="d">Exactly what the TRMNL device shows.</div></td>
+        </tr>
+        <tr>
+          <td>🛠️ <strong>API docs</strong> (try endpoints)</td>
+          <td><a href="http://localhost:8000/docs">localhost:8000/docs</a>
+            <div class="d">Interactive Swagger UI for every endpoint.</div></td>
+        </tr>
+        <tr>
+          <td>❤️ <strong>Health check</strong></td>
+          <td><a href="http://localhost:8000/api/health">localhost:8000/api/health</a>
+            <div class="d">Returns <code class="inline">{"status":"ok"}</code> if the server is up.</div></td>
+        </tr>
+        <tr>
+          <td>📱 <strong>Family dashboard</strong></td>
+          <td><a href="http://localhost:8000/">localhost:8000/</a>
+            <div class="d">The Flutter PWA — served at the root <em>after</em> a web build (see §4).</div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- FLUTTER DEV -->
+  <h2>🧩 3 · Run the Flutter app (development)</h2>
+  <div class="card">
+    <span class="pill">Terminal 2 — alongside Terminal 1</span>
+    <p class="lead">Hot-reload dashboard, pointed at your local backend.</p>
+<pre><span class="c">cd</span> frontend
+<span class="c">flutter</span> run -d chrome --dart-define=API_BASE=http://localhost:8000</pre>
+    <p class="lead" style="margin-top:12px">
+      A Chrome window opens. Log in with your passcode, send a message, then
+      refresh the <em>Elder's screen</em> tab to watch it appear. 🎉
+    </p>
+  </div>
+
+  <!-- SINGLE ORIGIN -->
+  <h2>📦 4 · One-server mode (like production)</h2>
+  <div class="card">
+    <p class="lead">Build the PWA once; the backend then serves it at
+      <code class="inline">/</code> — everything on <code class="inline">localhost:8000</code>, no second terminal.</p>
+<pre><span class="c">cd</span> frontend
+<span class="c">flutter</span> build web --release
+<span class="c">cd</span> ..\backend
+<span class="c">.\.venv\Scripts\python.exe</span> -m uvicorn app.main:app --port 8000</pre>
+  </div>
+
+  <!-- OFFLINE PREVIEW -->
+  <h2>👀 5 · Quick screen preview (no server)</h2>
+  <div class="card">
+    <p class="lead">Render the day &amp; night screens straight to HTML files.</p>
+<pre><span class="c">cd</span> backend
+<span class="c">.\.venv\Scripts\python.exe</span> smoke_test.py
+<span class="c">Start-Process</span> preview_day.html
+<span class="c">Start-Process</span> preview_night.html</pre>
+  </div>
+
+  <div class="note">
+    💡 <strong>Stopping:</strong> press <kbd>Ctrl</kbd> + <kbd>C</kbd> in a terminal.
+    &nbsp;•&nbsp; <strong>Reload flag:</strong> <code class="inline">--reload</code> auto-restarts on code edits (drop it for a normal run).
+    &nbsp;•&nbsp; The database lives at <code class="inline">backend\data\ambient_care.db</code>.
+  </div>
+
+  <footer>Ambient Care · TRMNL Arabic Memory Day-Clock · local quick reference</footer>
+</div>
+</body>
+</html>

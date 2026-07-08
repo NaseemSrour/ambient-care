@@ -1,0 +1,24 @@
+# Render.com Blueprint. Push this repo to GitHub, then in Render:
+#   New +  ->  Blueprint  ->  pick this repo. It reads this file.
+services:
+  - type: web
+    name: ambient-care
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: starter          # 'free' works too, but has no persistent disk (see below)
+    healthCheckPath: /api/health
+    envVars:
+      - key: AC_FAMILY_PASSCODE
+        sync: false        # set this secret in the Render dashboard
+      - key: AC_JWT_SECRET
+        generateValue: true
+      - key: AC_TIMEZONE
+        value: Asia/Jerusalem
+      - key: AC_TRMNL_POLL_KEY
+        generateValue: true
+    # A persistent disk keeps messages/tasks across deploys. Requires a paid
+    # plan. On the free plan, remove this block — data resets on redeploy.
+    disk:
+      name: ambient-care-data
+      mountPath: /data
+      sizeGB: 1

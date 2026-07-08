@@ -6,7 +6,7 @@ Please review the detailed specifications below, design the architecture, and ge
 
 ### 1. THE USER SCENARIO & CONSTRAINTS
 - **End-User (The Elder):** An elderly family member experiencing memory loss. They require a completely static, distraction-free, low-stimulation, and highly readable display to help with daily orientation.
-- **Admin Users (The Family):** Non-tech-savvy family members who need an incredibly simple, friction-free way to send messages, update calendars, and log completed tasks.
+- **Admin Users (The Family):** Non-tech-savvy family members who need an incredibly simple, friction-free way to send messages, update calendars, and log to-do/completed tasks.
 - **Hardware Target:** TRMNL e-paper display (via custom API webhook/plugin integration).
 
 ---
@@ -21,7 +21,7 @@ The output must generate clean, highly-legible HTML/CSS tailored for the TRMNL s
 - **Routine Reminders:** A clear, uncluttered list of critical tasks for that specific time period (e.g., "Take Morning Medication", "Lunchtime").
 - **Family Message:** A prominent space for a single, warm, comforting note from the family.
 - **Appointment Tracker:** A simple list of 1–2 upcoming events or caregiver arrivals for the day.
-- ** Bible verses:** Maybe a rotating list of sentences from the bible, the most famous ones, in correct Arabic.
+- ** Bible verses:** Maybe a rotating list of sentences from the bible (Catholic), the most famous ones, in correct Arabic.
 
 #### B. The Family Dashboard (App Requirements)
 - **Framework:** Flutter, built as a Progressive Web App (PWA) so family members can install it on their iPhone/Android home screens via a single URL with zero app store hassle.
@@ -43,7 +43,7 @@ is coming at around 5 o'clock").
 - **Endpoints Needed:**
   1. `POST /api/message`: Accepts a JSON payload from the Flutter PWA containing new family messages or schedule updates, saving them to a lightweight database/file (e.g., SQLite or JSON file).
   2. `GET /api/trmnl-payload`: The endpoint polled by the TRMNL webhook. It must:
-     - Check the current server time and determine the period of the day (Morning, Afternoon, Evening, Night).
+     - Check the current server time and determine the period of the day (Morning, Afternoon, Evening, Night). (All dates & times are in Asia/Jerusalem timezone).
      - Fetch the latest family message and active care tasks. (maybe a rolling family messages list?)
      - Return a TRMNL-compliant JSON response. This JSON must include the required keys (`html` containing the formatted, monochrome-safe HTML snippet, and any required metadata status flags).
 - **Refresh Interval:** The system handles data caching so that when TRMNL polls every 1 hour, it instantly receives the pre-compiled or freshly aggregated JSON without heavy processing.
@@ -53,7 +53,7 @@ is coming at around 5 o'clock").
 - State management utilizing a lightweight, predictable pattern (e.g., Riverpod or Provider).
 - PWA configurations complete with web manifest, icons, and offline caching capabilities for the dashboard structure.
 
-And tell where to deploy this kind of architecture.
+And tell where to deploy this kind of architecture. Is Firebase a good fit here?
 
 ---
 
@@ -86,7 +86,7 @@ The layout header must not just display a digital clock (which can cause confusi
 #### C. Message Persistence and "Stale Data" Prevention
 - **Expiration Rules:** Family messages can sometimes be forgotten by the senders. The Python backend must automatically expire any "Family Message" older than 24 hours. 
 - **Fallback State:** If no message has been sent recently, the space must gracefully collapse or display a generic, reassuring
- default phrase (e.g., "We love you, Naseem! Have a peaceful day.") rather than leaving an empty, broken-looking box.
+ default phrase (e.g., "We love you, grandma! Have a peaceful day.") rather than leaving an empty, broken-looking box.
 
 #### D. Non-Tech Dashboard Safety Rails (Flutter App)
 Because the family members using the app are non-tech-savvy, add these software constraints:
