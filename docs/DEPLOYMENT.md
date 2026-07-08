@@ -17,9 +17,22 @@ domain to remember for the family).
    * Device data: `/api/trmnl-payload?key=...`
    * Screen preview: `/api/trmnl.html?key=...`
 
-**Persistence:** the `disk:` block in `render.yaml` keeps the SQLite file across
-deploys (paid plans). On the free plan, remove that block — data resets when the
-service restarts, which is fine for early testing.
+### Free plan + keep-alive (no cost, always-on)
+
+`render.yaml` uses `plan: free`. Free services spin down after ~15 min idle,
+which would cold-start the device's poll. Keep it awake with a free uptime
+monitor:
+
+1. Create a free account at **uptimerobot.com**.
+2. **Add New Monitor** → type **HTTP(s)**.
+3. URL: `https://<your-service>.onrender.com/api/health`
+4. Monitoring interval: **5 minutes**.
+
+That single ping every 5 min keeps the service from ever sleeping (~730 h/month,
+within Render's free 750 h allowance). Note: the free plan has **no persistent
+disk**, so SQLite data resets if the instance is redeployed/recycled — fine here
+(messages are ephemeral; tasks/verses are quick to re-add). For guaranteed
+persistence, use `plan: starter` and add a `disk:` block.
 
 **Railway / Fly.io** work identically — point them at the same `Dockerfile`.
 

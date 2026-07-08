@@ -1,11 +1,16 @@
 # Render.com Blueprint. Push this repo to GitHub, then in Render:
 #   New +  ->  Blueprint  ->  pick this repo. It reads this file.
+#
+# Free plan: the service spins down after ~15 min of inactivity. We keep it
+# awake with a free UptimeRobot monitor pinging /api/health every 5 min (see
+# docs/DEPLOYMENT.md). No persistent disk on free — the SQLite data resets if
+# the instance is redeployed/recycled, which is fine for this use case.
 services:
   - type: web
     name: ambient-care
     runtime: docker
     dockerfilePath: ./Dockerfile
-    plan: starter          # 'free' works too, but has no persistent disk (see below)
+    plan: free
     healthCheckPath: /api/health
     envVars:
       - key: AC_FAMILY_PASSCODE
@@ -16,9 +21,3 @@ services:
         value: Asia/Jerusalem
       - key: AC_TRMNL_POLL_KEY
         generateValue: true
-    # A persistent disk keeps messages/tasks across deploys. Requires a paid
-    # plan. On the free plan, remove this block — data resets on redeploy.
-    disk:
-      name: ambient-care-data
-      mountPath: /data
-      sizeGB: 1
