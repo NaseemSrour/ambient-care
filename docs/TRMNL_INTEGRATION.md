@@ -54,10 +54,32 @@ screen, make it the only (or pinned) item so TRMNL doesn't rotate away from it.
 * Hit the preview URL to confirm the message appears.
 * Wait for the next device check-in (or force a refresh from the TRMNL app).
 
+## Device settings: refresh rate, plugin polling, and Sleep Mode
+
+There are **two independent refresh clocks** — updates reach the screen only
+after both tick:
+
+| Setting | Controls | Battery impact |
+|---|---|---|
+| **Plugin / data refresh** | how often TRMNL's *cloud* re-polls your URL and re-renders the stored image | none (server-side) |
+| **Device refresh rate** (Device Settings → Battery & Sleep) | how often the *device* wakes, pulls the latest image, and redraws the screen | **this is the battery driver** |
+
+Keep the plugin/data interval **≤** the device interval so fresh data is always
+waiting when the device wakes. Tune battery only via the device refresh rate.
+
+Recommended for battery-only deployment (no permanent power available):
+* **Refresh rate: 30 minutes** — messages appear within ~30 min; ~doubles
+  battery vs 15 min.
+* **Sleep Mode: 21:00 → 06:00.** During sleep the device does not wake at all;
+  the e-ink keeps showing the last frame (the «وقت النوم» bedtime screen, since
+  night mode starts 20:00) for free — a calm overnight cue. It wakes at 06:00
+  and pulls the morning screen.
+* Extended (2500 mAh) battery → roughly a few months per charge at this setting.
+
 ## Notes for reliable memory care
-* **Keep it powered.** Plug the device into permanent USB-C power so it can
-  check in hourly (or more often) without battery worry.
 * **Day/Night is automatic.** At 20:00 Asia/Jerusalem the screen inverts to
   black and shows «وقت النوم» — a strong bedtime cue. No action needed.
 * **Messages self-expire** after 24h and fall back to a warm default, so the
   screen never looks broken or shows stale notes.
+* **If permanent USB-C power is available**, you can skip Sleep Mode and refresh
+  more often (e.g. every 15 min) without battery concern.

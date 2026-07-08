@@ -82,7 +82,7 @@ def _styles(night: bool) -> str:
 .ac-root .col-main {{ flex:1 1 auto; }}
 .ac-root .checklist {{ list-style:none; overflow:hidden; }}
 .ac-root .checklist li {{ display:flex; align-items:center; gap:10px;
-  font-size:23px; font-weight:600; margin-bottom:9px; }}
+  font-size:26px; font-weight:600; margin-bottom:9px; }}
 .ac-root .checkbox {{ flex:0 0 30px; width:30px; height:30px;
   border:3px solid {fg}; display:flex; align-items:center;
   justify-content:center; font-size:22px; font-weight:900; }}
@@ -102,8 +102,8 @@ def _styles(night: bool) -> str:
 .ac-root .empty {{ font-size:20px; opacity:.7; }}
 .ac-root .footer {{ flex:0 0 auto; border-top:4px solid {fg}; margin-top:10px;
   padding-top:8px; text-align:center; }}
-.ac-root .verse {{ font-size:23px; font-weight:600; }}
-.ac-root .verse-ref {{ font-size:18px; opacity:.75; margin-top:2px; }}
+.ac-root .verse {{ font-size:28px; font-weight:600; }}
+.ac-root .verse-ref {{ font-size:20px; opacity:.75; margin-top:2px; }}
 """.strip()
 
 
