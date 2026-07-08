@@ -74,7 +74,7 @@ Preview the elder's screen at <http://localhost:8000/api/trmnl.html>.
 ## Next steps / ideas
 - Family photo upload (TRMNL renders `<img>`) with a black-and-white caption.
 - Multiple rolling messages instead of one.
-- Per-sender attribution if you later switch to named accounts.
+- Per-sender attribution if I later switch to named accounts.
 
 See **[docs/TRMNL_INTEGRATION.md](docs/TRMNL_INTEGRATION.md)** to connect the device
 and **[docs/DEPLOYMENT.md](docs/DEPLOYMENT.md)** to go live.
