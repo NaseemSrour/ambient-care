@@ -1,7 +1,7 @@
 # Ambient Care — TRMNL Arabic Memory Day-Clock
 
 A gentle, distraction-free ambient information system for an elderly family
-member experiencing memory loss. The family sends messages, routine reminders,
+member experiencing symptoms of memory loss. The family sends messages, routine reminders,
 and visit reminders from a simple phone app; those appear — in correct
 Arabic — on a low-stimulation TRMNL e-paper screen at the elder's home.
 
