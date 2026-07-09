@@ -26,7 +26,57 @@ from dataclasses import dataclass
 from .bible import Verse
 from .config import get_settings
 from .models import Event, Task
-from .time_context import Mode, TimeContext
+from .time_context import Mode, Period, TimeContext
+
+
+# Period icons drawn as SVG shapes (not font emoji) so they render as crisp,
+# reliable black/white on the 1-bit e-ink panel. They use currentColor, so they
+# follow the greeting color: black in day mode, white at night.
+_PERIOD_ICONS: dict[Period, str] = {
+    # Morning — full sun with rays
+    Period.MORNING: (
+        '<svg class="pic" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+        '<circle cx="32" cy="32" r="12" fill="currentColor"/>'
+        '<g stroke="currentColor" stroke-width="5" stroke-linecap="round">'
+        '<line x1="32" y1="3" x2="32" y2="12"/><line x1="32" y1="52" x2="32" y2="61"/>'
+        '<line x1="3" y1="32" x2="12" y2="32"/><line x1="52" y1="32" x2="61" y2="32"/>'
+        '<line x1="11" y1="11" x2="17" y2="17"/><line x1="47" y1="47" x2="53" y2="53"/>'
+        '<line x1="53" y1="11" x2="47" y2="17"/><line x1="17" y1="47" x2="11" y2="53"/>'
+        "</g></svg>"
+    ),
+    # Afternoon — sun peeking behind a cloud
+    Period.AFTERNOON: (
+        '<svg class="pic" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+        '<circle cx="24" cy="22" r="10" fill="currentColor"/>'
+        '<g stroke="currentColor" stroke-width="4" stroke-linecap="round">'
+        '<line x1="24" y1="4" x2="24" y2="10"/><line x1="6" y1="22" x2="12" y2="22"/>'
+        '<line x1="10" y1="8" x2="14" y2="12"/><line x1="38" y1="8" x2="34" y2="12"/></g>'
+        '<g fill="currentColor"><circle cx="28" cy="44" r="10"/>'
+        '<circle cx="41" cy="45" r="12"/><circle cx="51" cy="47" r="8"/>'
+        '<rect x="26" y="46" width="29" height="12" rx="6"/></g></svg>'
+    ),
+    # Evening — sun setting over the horizon
+    Period.EVENING: (
+        '<svg class="pic" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+        '<path d="M20 42 a12 12 0 0 1 24 0 Z" fill="currentColor"/>'
+        '<g stroke="currentColor" stroke-width="5" stroke-linecap="round">'
+        '<line x1="32" y1="12" x2="32" y2="20"/><line x1="12" y1="28" x2="17" y2="31"/>'
+        '<line x1="52" y1="28" x2="47" y2="31"/><line x1="6" y1="42" x2="18" y2="42"/>'
+        '<line x1="46" y1="42" x2="58" y2="42"/><line x1="12" y1="54" x2="52" y2="54"/>'
+        "</g></svg>"
+    ),
+    # Night — crescent moon with a sparkle
+    Period.NIGHT: (
+        '<svg class="pic" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">'
+        '<path d="M48 34 A17 17 0 1 1 30 17 A13 13 0 1 0 48 34 Z" fill="currentColor"/>'
+        '<path d="M52 7 l1.8 5.6 l5.6 1.8 l-5.6 1.8 l-1.8 5.6 l-1.8-5.6 l-5.6-1.8 l5.6-1.8 Z"'
+        ' fill="currentColor"/></svg>'
+    ),
+}
+
+
+def _period_icon(period: Period) -> str:
+    return _PERIOD_ICONS.get(period, "")
 
 
 # Supported Arabic display fonts. Each maps a name -> (Google Fonts request
@@ -71,7 +121,9 @@ def _styles(night: bool) -> str:
   display:flex; flex-direction:column; }}
 .ac-root .header {{ flex:0 0 auto; text-align:center; border-bottom:4px solid {fg};
   padding-bottom:8px; margin-bottom:12px; }}
-.ac-root .greeting {{ font-size:58px; font-weight:900; line-height:1.05; }}
+.ac-root .greeting {{ font-size:58px; font-weight:900; line-height:1.05;
+  display:flex; align-items:center; justify-content:center; gap:16px; }}
+.ac-root .greeting .pic {{ width:54px; height:54px; flex:0 0 auto; }}
 .ac-root .orient {{ font-size:28px; font-weight:700; margin-top:4px; }}
 .ac-root .orient .dot {{ margin:0 12px; }}
 .ac-root .body {{ display:flex; flex:1 1 auto; gap:18px; min-height:0;
@@ -109,7 +161,7 @@ def _styles(night: bool) -> str:
 
 def _checklist(tasks: list[Task]) -> str:
     if not tasks:
-        return '<p class="empty">لا توجد مهام الآن — استرِح واستمتع بيومك</p>'
+        return '<p class="empty">لا توجد مهام الآن — إسترِحي واستمتعي بيومك</p>'
     items = []
     for task in tasks:
         box = "checkbox done" if task.done else "checkbox"
@@ -149,7 +201,7 @@ def render_fragment(ctx: RenderContext) -> str:
     return f"""<style>{_styles(night)}</style>
 <div class="ac-root">
   <div class="header">
-    <div class="greeting">{ctx.time.greeting_emoji} {_e(ctx.time.greeting_ar)}</div>
+    <div class="greeting">{_period_icon(ctx.time.period)}{_e(ctx.time.greeting_ar)}</div>
     <div class="orient">{_e(ctx.time.weekday_ar)}<span class="dot">•</span>{_e(ctx.time.date_ar)}</div>
   </div>
   <div class="body">
