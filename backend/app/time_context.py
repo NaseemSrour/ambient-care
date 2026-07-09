@@ -79,13 +79,13 @@ class TimeContext:
 
 
 def _period_for_hour(hour: int) -> Period:
-    if 6 <= hour <= 11:
+    if 4 <= hour <= 11:
         return Period.MORNING
     if 12 <= hour <= 16:
         return Period.AFTERNOON
     if 17 <= hour <= 19:
         return Period.EVENING
-    return Period.NIGHT  # 20:00 – 05:59
+    return Period.NIGHT  # 20:00 – 03:59
 
 
 def _greeting_for_period(period: Period) -> tuple[str, str]:
@@ -107,7 +107,7 @@ def build_time_context(tz_name: str, *, now: datetime | None = None) -> TimeCont
     current = now.astimezone(tz) if now else datetime.now(tz)
 
     period = _period_for_hour(current.hour)
-    mode = Mode.DAY if 6 <= current.hour <= 19 else Mode.NIGHT
+    mode = Mode.DAY if 4 <= current.hour <= 19 else Mode.NIGHT
     greeting, emoji = _greeting_for_period(period)
 
     weekday_ar = _ARABIC_WEEKDAYS[current.weekday()]

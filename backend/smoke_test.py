@@ -46,11 +46,12 @@ def preview(hour: int, filename: str) -> None:
 def assert_time_logic() -> None:
     def ctx(h):
         return build_time_context(tz, now=datetime(2026, 7, 8, h, 0, tzinfo=ZoneInfo(tz)))
+    assert ctx(4).period is Period.MORNING and ctx(4).mode is Mode.DAY   # new 04:00 start
+    assert ctx(3).period is Period.NIGHT and ctx(3).mode is Mode.NIGHT   # 03:59 still night
     assert ctx(8).period is Period.MORNING and ctx(8).mode is Mode.DAY
     assert ctx(14).period is Period.AFTERNOON and ctx(14).mode is Mode.DAY
     assert ctx(18).period is Period.EVENING and ctx(18).mode is Mode.DAY
     assert ctx(22).period is Period.NIGHT and ctx(22).mode is Mode.NIGHT
-    assert ctx(3).period is Period.NIGHT and ctx(3).mode is Mode.NIGHT
     assert ctx(8).weekday_ar == "الأربعاء"  # 2026-07-08 is a Wednesday
     print("  time logic assertions: OK")
 
