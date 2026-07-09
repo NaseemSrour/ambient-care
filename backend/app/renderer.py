@@ -107,11 +107,20 @@ def _e(text: str) -> str:
     return html.escape(text, quote=True)
 
 
+def _resolve_font(name: str) -> tuple[str, str]:
+    """Look up a font by name, tolerant of case/whitespace. Falls back to Cairo."""
+    requested = name.strip().casefold()
+    for key, value in _FONTS.items():
+        if key.casefold() == requested:
+            return value
+    return _FONTS["Cairo"]
+
+
 def _styles(night: bool) -> str:
     settings = get_settings()
     fg = "#fff" if night else "#000"
     bg = "#000" if night else settings.day_bg
-    font_param, font_family = _FONTS.get(settings.display_font, _FONTS["Cairo"])
+    font_param, font_family = _resolve_font(settings.display_font)
     return f"""
 @import url('https://fonts.googleapis.com/css2?family={font_param}&display=swap');
 .ac-root, .ac-root * {{ margin:0; padding:0; box-sizing:border-box;
