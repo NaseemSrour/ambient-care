@@ -65,67 +65,6 @@ class ApiClient {
   Future<void> deleteMessage(int id) async =>
       _decode(await http.delete(_uri('/api/messages/$id'), headers: _headers));
 
-  // --- Tasks ----------------------------------------------------------------
-  Future<List<CareTask>> getTasks() async {
-    final r = await http.get(_uri('/api/tasks'), headers: _headers);
-    return (_decode(r) as List)
-        .map((e) => CareTask.fromJson(e as Map<String, dynamic>))
-        .toList();
-  }
-
-  Future<CareTask> addTask(String title, TaskPeriod period) async {
-    final r = await http.post(_uri('/api/tasks'),
-        headers: _headers,
-        body: jsonEncode({'title': title, 'period': period.name}));
-    return CareTask.fromJson(_decode(r) as Map<String, dynamic>);
-  }
-
-  Future<CareTask> setTaskDone(int id, bool done) async {
-    final r = await http.patch(_uri('/api/tasks/$id'),
-        headers: _headers, body: jsonEncode({'done': done}));
-    return CareTask.fromJson(_decode(r) as Map<String, dynamic>);
-  }
-
-  Future<void> deleteTask(int id) async =>
-      _decode(await http.delete(_uri('/api/tasks/$id'), headers: _headers));
-
-  // --- Events ---------------------------------------------------------------
-  Future<List<CareEvent>> getEvents() async {
-    final r = await http.get(_uri('/api/events'), headers: _headers);
-    return (_decode(r) as List)
-        .map((e) => CareEvent.fromJson(e as Map<String, dynamic>))
-        .toList();
-  }
-
-  Future<CareEvent> addEvent(String title, String date, String timeText) async {
-    final r = await http.post(_uri('/api/events'),
-        headers: _headers,
-        body: jsonEncode(
-            {'title': title, 'event_date': date, 'time_text': timeText}));
-    return CareEvent.fromJson(_decode(r) as Map<String, dynamic>);
-  }
-
-  Future<void> deleteEvent(int id) async =>
-      _decode(await http.delete(_uri('/api/events/$id'), headers: _headers));
-
-  // --- Bible verses ---------------------------------------------------------
-  Future<List<BibleVerse>> getVerses() async {
-    final r = await http.get(_uri('/api/verses'), headers: _headers);
-    return (_decode(r) as List)
-        .map((e) => BibleVerse.fromJson(e as Map<String, dynamic>))
-        .toList();
-  }
-
-  Future<BibleVerse> addVerse(String text, String reference) async {
-    final r = await http.post(_uri('/api/verses'),
-        headers: _headers,
-        body: jsonEncode({'text': text, 'reference': reference}));
-    return BibleVerse.fromJson(_decode(r) as Map<String, dynamic>);
-  }
-
-  Future<void> deleteVerse(int id) async =>
-      _decode(await http.delete(_uri('/api/verses/$id'), headers: _headers));
-
   // --- Device status --------------------------------------------------------
   Future<DeviceStatus> getStatus() async {
     final r = await http.get(_uri('/api/status'), headers: _headers);

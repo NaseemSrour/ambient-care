@@ -6,19 +6,8 @@ and the storage format can evolve independently.
 from __future__ import annotations
 
 from datetime import datetime
-from enum import Enum
 
 from pydantic import BaseModel, Field
-
-
-class TaskPeriod(str, Enum):
-    """Which time block a routine task belongs to."""
-
-    MORNING = "morning"
-    AFTERNOON = "afternoon"
-    EVENING = "evening"
-    NIGHT = "night"
-    ANYTIME = "anytime"  # always shown regardless of period
 
 
 # ---------------------------------------------------------------------------
@@ -47,61 +36,6 @@ class Message(BaseModel):
     text: str
     created_at: datetime
     expires_at: datetime
-
-
-# ---------------------------------------------------------------------------
-# Routine tasks (visual checklist)
-# ---------------------------------------------------------------------------
-class TaskCreate(BaseModel):
-    title: str = Field(min_length=1, max_length=60)
-    period: TaskPeriod = TaskPeriod.ANYTIME
-
-
-class TaskUpdate(BaseModel):
-    title: str | None = Field(default=None, min_length=1, max_length=60)
-    period: TaskPeriod | None = None
-    done: bool | None = None
-
-
-class Task(BaseModel):
-    id: int
-    title: str
-    period: TaskPeriod
-    done: bool
-    created_at: datetime
-
-
-# ---------------------------------------------------------------------------
-# Appointments / visits
-# ---------------------------------------------------------------------------
-class EventCreate(BaseModel):
-    title: str = Field(min_length=1, max_length=80)
-    # ISO date "2026-07-08"; the day the event happens.
-    event_date: str
-    # Free-text, human time like "حوالي الساعة ٥ مساءً" — never a strict clock.
-    time_text: str = Field(default="", max_length=40)
-
-
-class Event(BaseModel):
-    id: int
-    title: str
-    event_date: str
-    time_text: str
-    created_at: datetime
-
-
-# ---------------------------------------------------------------------------
-# Bible verses (family-managed, auto-rotated daily on the display)
-# ---------------------------------------------------------------------------
-class BibleVerseCreate(BaseModel):
-    text: str = Field(min_length=1, max_length=160)
-    reference: str = Field(default="", max_length=60)
-
-
-class BibleVerse(BaseModel):
-    id: int
-    text: str
-    reference: str
 
 
 # ---------------------------------------------------------------------------

@@ -3,10 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../state/providers.dart';
 import 'message_screen.dart';
-import 'schedule_screen.dart';
-import 'verses_screen.dart';
 
-/// The hub. Shows device status at a glance, then two big actions.
+/// The hub. Shows device status at a glance, then the send-message action.
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
 
@@ -37,20 +35,6 @@ class HomeScreen extends ConsumerWidget {
                   label: 'إرسال رسالة',
                   subtitle: 'اكتب كلمة حبّ تظهر على الشاشة',
                   onTap: () => _go(context, const MessageScreen()),
-                ),
-                const SizedBox(height: 16),
-                _BigAction(
-                  emoji: '🗓️',
-                  label: 'المهام والزيارات',
-                  subtitle: 'أضِف تذكيرات الروتين ومواعيد الزيارة',
-                  onTap: () => _go(context, const ScheduleScreen()),
-                ),
-                const SizedBox(height: 16),
-                _BigAction(
-                  emoji: '📖',
-                  label: 'آيات الكتاب المقدّس',
-                  subtitle: 'أضِف أو احذف الآيات التي تظهر على الشاشة',
-                  onTap: () => _go(context, const VersesScreen()),
                 ),
               ],
             ),

@@ -21,29 +21,6 @@ CREATE TABLE IF NOT EXISTS messages (
     expires_at  TEXT    NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS tasks (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    title       TEXT    NOT NULL,
-    period      TEXT    NOT NULL DEFAULT 'anytime',
-    done        INTEGER NOT NULL DEFAULT 0,
-    created_at  TEXT    NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS events (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    title       TEXT    NOT NULL,
-    event_date  TEXT    NOT NULL,
-    time_text   TEXT    NOT NULL DEFAULT '',
-    created_at  TEXT    NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS verses (
-    id          INTEGER PRIMARY KEY AUTOINCREMENT,
-    text        TEXT    NOT NULL,
-    reference   TEXT    NOT NULL DEFAULT '',
-    created_at  TEXT    NOT NULL
-);
-
 -- single-row table tracking the last time the TRMNL device polled us
 CREATE TABLE IF NOT EXISTS device_state (
     id           INTEGER PRIMARY KEY CHECK (id = 1),
@@ -60,20 +37,9 @@ def _db_path() -> Path:
 
 
 def init_db() -> None:
-    """Create tables on startup, then seed default verses if none exist."""
-    from datetime import datetime, timezone
-
-    from .bible import SEED_VERSES
-
+    """Create tables on startup."""
     with connect() as conn:
         conn.executescript(_SCHEMA)
-        (count,) = conn.execute("SELECT COUNT(*) FROM verses").fetchone()
-        if count == 0:
-            now = datetime.now(timezone.utc).isoformat()
-            conn.executemany(
-                "INSERT INTO verses (text, reference, created_at) VALUES (?, ?, ?)",
-                [(v.text, v.reference, now) for v in SEED_VERSES],
-            )
 
 
 @contextmanager

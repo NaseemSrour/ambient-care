@@ -13,8 +13,7 @@ from dataclasses import dataclass
 from . import repository as repo
 from .config import get_settings
 from .renderer import RenderContext, render_document, render_fragment
-from .time_context import Period, build_time_context
-from .models import TaskPeriod
+from .time_context import build_time_context
 
 
 @dataclass
@@ -24,15 +23,6 @@ class _CacheEntry:
 
 
 _cache: _CacheEntry | None = None
-
-
-def _period_to_task_period(period: Period) -> TaskPeriod:
-    return {
-        Period.MORNING: TaskPeriod.MORNING,
-        Period.AFTERNOON: TaskPeriod.AFTERNOON,
-        Period.EVENING: TaskPeriod.EVENING,
-        Period.NIGHT: TaskPeriod.NIGHT,
-    }[period]
 
 
 def build_render_context() -> RenderContext:
@@ -46,21 +36,10 @@ def build_render_context() -> RenderContext:
     else:
         message_text, is_fallback = settings.default_message, True
 
-    tasks = repo.tasks_for_period(_period_to_task_period(ctx_time.period))
-    today = ctx_time.now.strftime("%Y-%m-%d")
-    events = repo.events_on(today, limit=2)
-    # Seed with date+period so the verse changes ~4x/day (once per period) and
-    # stays fixed across hourly polls within a period.
-    verse_seed = f"{ctx_time.now:%Y-%m-%d}|{ctx_time.period.value}"
-    verse = repo.pick_verse(verse_seed)
-
     return RenderContext(
         time=ctx_time,
         message_text=message_text,
         message_is_fallback=is_fallback,
-        tasks=tasks,
-        events=events,
-        verse=verse,
     )
 
 

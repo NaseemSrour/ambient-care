@@ -10,8 +10,6 @@ Public:
 
 Protected (family token required):
   GET/POST/DELETE  /api/messages
-  GET/POST/PATCH/DELETE  /api/tasks
-  GET/POST/DELETE  /api/events
   GET  /api/status                 is the TRMNL device online?
 
 The built Flutter PWA (frontend/build/web) is served at / when present.
@@ -33,17 +31,10 @@ from .auth import issue_token, require_auth, verify_passcode
 from .config import get_settings
 from .database import init_db
 from .models import (
-    BibleVerse,
-    BibleVerseCreate,
     DeviceStatus,
-    Event,
-    EventCreate,
     LoginRequest,
     Message,
     MessageCreate,
-    Task,
-    TaskCreate,
-    TaskUpdate,
     TokenResponse,
 )
 
@@ -132,74 +123,6 @@ def post_message(body: MessageCreate) -> Message:
 @app.delete("/api/messages/{message_id}", dependencies=[Depends(require_auth)])
 def remove_message(message_id: int) -> dict:
     if not repo.delete_message(message_id):
-        raise HTTPException(status_code=404, detail="not found")
-    return {"deleted": True}
-
-
-# ---------------------------------------------------------------------------
-# Tasks (protected)
-# ---------------------------------------------------------------------------
-@app.get("/api/tasks", response_model=list[Task], dependencies=[Depends(require_auth)])
-def get_tasks() -> list[Task]:
-    return repo.list_tasks()
-
-
-@app.post("/api/tasks", response_model=Task, dependencies=[Depends(require_auth)])
-def post_task(body: TaskCreate) -> Task:
-    return repo.add_task(body)
-
-
-@app.patch("/api/tasks/{task_id}", response_model=Task, dependencies=[Depends(require_auth)])
-def patch_task(task_id: int, body: TaskUpdate) -> Task:
-    task = repo.update_task(task_id, body)
-    if task is None:
-        raise HTTPException(status_code=404, detail="not found")
-    return task
-
-
-@app.delete("/api/tasks/{task_id}", dependencies=[Depends(require_auth)])
-def remove_task(task_id: int) -> dict:
-    if not repo.delete_task(task_id):
-        raise HTTPException(status_code=404, detail="not found")
-    return {"deleted": True}
-
-
-# ---------------------------------------------------------------------------
-# Events (protected)
-# ---------------------------------------------------------------------------
-@app.get("/api/events", response_model=list[Event], dependencies=[Depends(require_auth)])
-def get_events() -> list[Event]:
-    return repo.list_events()
-
-
-@app.post("/api/events", response_model=Event, dependencies=[Depends(require_auth)])
-def post_event(body: EventCreate) -> Event:
-    return repo.add_event(body)
-
-
-@app.delete("/api/events/{event_id}", dependencies=[Depends(require_auth)])
-def remove_event(event_id: int) -> dict:
-    if not repo.delete_event(event_id):
-        raise HTTPException(status_code=404, detail="not found")
-    return {"deleted": True}
-
-
-# ---------------------------------------------------------------------------
-# Bible verses (protected)
-# ---------------------------------------------------------------------------
-@app.get("/api/verses", response_model=list[BibleVerse], dependencies=[Depends(require_auth)])
-def get_verses() -> list[BibleVerse]:
-    return repo.list_verses()
-
-
-@app.post("/api/verses", response_model=BibleVerse, dependencies=[Depends(require_auth)])
-def post_verse(body: BibleVerseCreate) -> BibleVerse:
-    return repo.add_verse(body)
-
-
-@app.delete("/api/verses/{verse_id}", dependencies=[Depends(require_auth)])
-def remove_verse(verse_id: int) -> dict:
-    if not repo.delete_verse(verse_id):
         raise HTTPException(status_code=404, detail="not found")
     return {"deleted": True}
 

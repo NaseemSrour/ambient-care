@@ -7,9 +7,7 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from app.time_context import Mode, Period, build_time_context
-from app.bible import SEED_VERSES
 from app.renderer import RenderContext, render_document
-from app.models import Task, TaskPeriod, Event
 
 tz = "Asia/Jerusalem"
 
@@ -19,23 +17,8 @@ def preview(hour: int, filename: str) -> None:
     tc = build_time_context(tz, now=now)
     ctx = RenderContext(
         time=tc,
-        message_text="مرحباً يا جدّتي الغالية، سارة قادمة لزيارتك اليوم الساعة الثالثة عصراً ومعها الأولاد، ننتظر لقاءك بفارغ الصبر ونحبّك كثيراً",
+        message_text="مرحباً يا جدّتي الغالية، سارة قادمة لزيارتك اليوم الساعة الثالثة عصراً ومعها الأولاد، ونحبّك كثيراً",
         message_is_fallback=False,
-        tasks=[
-            Task(id=1, title="تناول دواء الصباح", period=TaskPeriod.MORNING,
-                 done=True, created_at=now),
-            Task(id=2, title="تناول الغداء", period=TaskPeriod.ANYTIME,
-                 done=False, created_at=now),
-            Task(id=3, title="شرب الماء", period=TaskPeriod.ANYTIME,
-                 done=False, created_at=now),
-        ],
-        events=[
-            Event(id=1, title="زيارة يوسف", event_date="2026-07-08",
-                  time_text="حوالي الساعة ٥ مساءً", created_at=now),
-            Event(id=2, title="وصول الممرضة", event_date="2026-07-08",
-                  time_text="بعد الظهر", created_at=now),
-        ],
-        verse=SEED_VERSES[now.timetuple().tm_yday % len(SEED_VERSES)],
     )
     with open(filename, "w", encoding="utf-8") as fh:
         fh.write(render_document(ctx))

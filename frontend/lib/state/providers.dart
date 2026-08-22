@@ -50,18 +50,3 @@ final messagesProvider =
     FutureProvider.autoDispose<List<FamilyMessage>>(
   (ref) => ref.watch(apiProvider).getMessages(),
 );
-
-/// All routine tasks.
-final tasksProvider = FutureProvider.autoDispose<List<CareTask>>(
-  (ref) => ref.watch(apiProvider).getTasks(),
-);
-
-/// All upcoming events.
-final eventsProvider = FutureProvider.autoDispose<List<CareEvent>>(
-  (ref) => ref.watch(apiProvider).getEvents(),
-);
-
-/// Bible verses that rotate on the elder's screen.
-final versesProvider = FutureProvider.autoDispose<List<BibleVerse>>(
-  (ref) => ref.watch(apiProvider).getVerses(),
-);
